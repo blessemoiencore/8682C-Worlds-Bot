@@ -8,6 +8,7 @@
 #include "pros/rtos.h"
 #include <cmath>
 #include <iostream>
+#include "gainschedule.h"
 
 
 Controller remote(pros::E_CONTROLLER_MASTER);
@@ -56,7 +57,6 @@ void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "8682C");
 	chassis.calibrate();
-
 	//lady brown task
 	/*
 	 pros::Task lift_control_task([]{
@@ -113,8 +113,8 @@ void competition_initialize() {}
 void autonomous() {
 auto_started = true;
 chassis.setPose(0,0,0);
-chassis.moveToPose(0, 48, 45, 40000,{.lead = 0.9});
-chassis.lateralPID.setGains(20, 0, 20);
+//chassis.moveToPose(0, 48, 45, 40000,{.lead = 0.9});
+turnToHeading_GS(90, 40000);
 //printf( "pid gains: %f", chassis.lateralPID.kP); 
 
 }
