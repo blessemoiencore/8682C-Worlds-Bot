@@ -29,12 +29,12 @@ lemlib::Drivetrain drivetrain(&left_motors,
 
 //sensors
 Imu imu1(5);//port
-Rotation lb_rotation(-1); 
+Rotation lb_rotation(1); 
 
 //tracking wheel configuration
 //Rotation horizontal_rotation(1);
 Rotation vertical_rotation(4);
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_275, -5.75); //change
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_rotation, lemlib::Omniwheel::NEW_275,   .75); //change 0.85
 lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel 1, set to null
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
                             nullptr, // horizontal tracking wheel 1
@@ -43,15 +43,15 @@ lemlib::OdomSensors sensors(&vertical_tracking_wheel, // vertical tracking wheel
 );
 
 //PID configurations
-lemlib::ControllerSettings lateral_controller(4.75, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              8, // derivative gain (kD)
+lemlib::ControllerSettings lateral_controller(3.75, // proportional gain (kP) /4 works
+                                              0.2, // integral gain (kI)
+                                              8, // derivative gain (kD) /8 works
                                               3, // anti windup
                                               0.5, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
                                               1.5, // large error range, in inches
                                               500, // large error range timeout, in milliseconds
-                                              0 // maximum acceleration (slew)
+                                              20 // maximum acceleration (slew)
 );
 
 
@@ -83,7 +83,7 @@ adi::Pneumatics grab('A', false);
 adi::Pneumatics intakeLift('H',false);
 
 //motors
-Motor intake(-16, MotorGears::green);
+Motor intake(16, MotorGears::green);
 Motor conveyor(20, MotorGears::blue);
 Motor lift(11,MotorGears::green);
 

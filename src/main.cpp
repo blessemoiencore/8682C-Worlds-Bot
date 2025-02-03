@@ -1,6 +1,7 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "cmath"
+#include "lemlib/chassis/chassis.hpp"
 #include "lemlib/pid.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
@@ -9,15 +10,16 @@
 #include <cmath>
 #include <iostream>
 #include "gainschedule.h"
+#include "pros/rtos.hpp"
 
 
 Controller remote(pros::E_CONTROLLER_MASTER);
 bool auto_started = false;
 
 void lift_control(float angle) {
-    double tolerance = 150;
+    double tolerance = 0;
     while ((fabs(angle - lb_rotation.get_position()) > tolerance)) {
-        float kp = 0.005;
+        float kp = 0.0145;
         float error = angle - lb_rotation.get_position();
         float voltage = kp * error;
         lift.move(voltage);
@@ -58,25 +60,18 @@ void initialize() {
 	pros::lcd::set_text(1, "8682C");
 	chassis.calibrate();
 	//lady brown task
-	/*
-	 pros::Task lift_control_task([]{
-	 	lift_control();
+	
+	 pros::Task odom_task([]{
+		while (true) {
+		 pros::lcd::print(2, "vertical sensor: %f", ((vertical_rotation.get_position() * 3.14159265  * 2.75)) / 36000 );
+		 pros::delay(10);
+		}
+
 	 });
-	 */
+	 
 
 	pros::lcd::register_btn1_cb(on_center_button);
 
-	/*
-	while(!auto_started) {
-        pros::lcd::print(2, "rotation lb: %f", lb_rotation.get_position());
-
-
-        // pros::lcd::print(1, "horizontal sensor: %i", horizontal_rotation.get_position());
-        pros::lcd::print(2, "vertical sensor: %i", vertical_rotation.get_position());
-		pros::lcd::print(3, "angular: %f", imu1.get_rotation());
-		pros::delay(10);
-	}
-	*/
 	
 
 }
@@ -112,10 +107,71 @@ void competition_initialize() {}
  */
 void autonomous() {
 auto_started = true;
+/*
+conveyor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 chassis.setPose(0,0,0);
-//chassis.moveToPose(0, 48, 45, 40000,{.lead = 0.9});
-turnToHeading_GS(90, 40000);
-//printf( "pid gains: %f", chassis.lateralPID.kP); 
+chassis.turnToHeading((90), 10000);
+*/
+
+//scoring the preload onto the alliance stake
+//chassis.angularPID.setGains(2.25, 0, 12.5); home pid constants
+chassis.setPose(-60,0,90);
+intakeLift.set_value(true);
+conveyor.move(127);
+delay(500);
+conveyor.brake();
+
+
+//grabbing first mobile goal
+chassis.moveToPoint(-48, 0, 900,{.forwards = true, .maxSpeed = 60});
+chassis.waitUntilDone();
+chassis.turnToHeading(0, 1100);
+chassis.moveToPoint(-48, -22, 1000,{.forwards = false, .maxSpeed =50 });
+delay(570);
+grab.extend();
+
+
+//going for the first and second rings
+//chassis.moveToPoint(-47, -23.5, 800, {.forwards = false, .maxSpeed = 40});
+intake.move(127);
+conveyor.move(90);
+chassis.turnToHeading(90, 1100);
+chassis.moveToPoint(-21, -22, 1000); //-21, -27
+
+//chassis.turnToHeading(110, 500);
+chassis.moveToPose(17, -44,110, 3000, {.forwards = true, .maxSpeed = 127, .minSpeed = 30, .earlyExitRange = 5});
+//chassis.turnToHeading(245, 1500);
+//chassis.moveToPose(5, -55, 270, 800, {.lead = 0.3});
+conveyor.move(127);
+//chassis.moveToPoint(-2, -58, 1000);
+delay(1000);
+chassis.swingToHeading(250, lemlib::DriveSide::LEFT, 1500, {.maxSpeed = 80, .minSpeed = 30, .earlyExitRange = 4});
+chassis.waitUntilDone();
+//delay(1500);
+chassis.moveToPose(-2, -100, 180, 2800, {.lead = 0.67, .maxSpeed = 60});
+//lift.move_absolute(-190, 170);
+delay(1500);
+//conveyor.brake();
+//lift.move_absolute(-1250, 170);
+chassis.swingToHeading(290, lemlib::DriveSide::LEFT, 1500, {.maxSpeed = 90});
+chassis.waitUntilDone();
+conveyor.brake();
+conveyor.move(90);
+chassis.moveToPose(-61, -48, 270, 4000, {.maxSpeed = 75});
+
+
+
+
+//chassis.moveToPose(-2, -62, 180, 600);
+//chassis.moveToPoint(-2, -62, 700, {.maxSpeed = 60});
+//chassis.turnToHeading(180, 800);
+//chassis.swingToHeading(180, lemlib::DriveSide::LEFT, 1000);
+//chassis.turnToPoint(4, -55, 1100);
+//hassis.moveToPoint(-8, 40, 3000, {.minSpeed = 20, .earlyExitRange = 4});
+//resetting pose
+//chassis.setPose(0,-60,180);
+
+
 
 }
 
@@ -140,7 +196,7 @@ void opcontrol() {
 
 			pros::lcd::print(3, "angular: %f", imu1.get_heading());
 
-			pros::lcd::print(4, "pid gains: %f", chassis.lateralPID); // what will this do??? 
+			pros::lcd::print(4, "pid gains: %i", vertical_rotation.get_position()); // what will this do??? 
 
 
 		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
@@ -152,8 +208,18 @@ void opcontrol() {
 		}
 
 		if (remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-			lift_control(-50); //testing
+			//lift.move_absolute(-1250, 170); //scoring pose
+			lift.move_absolute(-230, 170);
 		}
+	
+		if(remote.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+			intake.move(127);
+			conveyor.move(127);
+		}
+		else {
+			intake.brake();
+			conveyor.brake();
+					}
 
 		//arcade
 		int dir = remote.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick

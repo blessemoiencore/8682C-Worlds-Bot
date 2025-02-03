@@ -11,4 +11,10 @@ void turnToHeading_GS(float theta, int timeout, lemlib::TurnToHeadingParams para
         chassis.angularPID.setGains(1.85, 0.3, 12.5);
     }
     chassis.turnToHeading(theta,  timeout, params = {});
+
+
+}
+
+void moveToPoint_GS() {
+
 }
