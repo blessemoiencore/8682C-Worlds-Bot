@@ -28,6 +28,7 @@ extern Controller remote;
 extern Rotation lb_rotation;
 extern adi::Pneumatics grab;
 extern adi::Pneumatics intakeLift;
+extern adi::Pneumatics doinker;
 
 //extern void move_lift(float angle);
 //extern void lift_control(float angle);

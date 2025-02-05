@@ -1,4 +1,6 @@
+#include "autons.h"
 #include "main.h"
+#include "pros/abstract_motor.hpp"
 
 void example_auton() {
     // Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
@@ -58,4 +60,94 @@ void test_drive() {
 
 
 
+}
+
+void skills() {
+    /*
+conveyor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+chassis.setPose(0,0,0);
+chassis.turnToHeading((90), 10000);
+*/
+
+//scoring the preload onto the alliance stake
+//chassis.angularPID.setGains(2.25, 0, 12.5); home pid constants
+chassis.setPose(-60,0,90);
+intakeLift.set_value(true);
+conveyor.move(127);
+delay(500);
+conveyor.brake();
+
+
+//grabbing first mobile goal
+chassis.moveToPoint(-48, 0, 900,{.forwards = true, .maxSpeed = 60});
+chassis.waitUntilDone();
+chassis.turnToHeading(0, 1100);
+chassis.moveToPoint(-48, -22, 1000,{.forwards = false, .maxSpeed =50 });
+delay(570);
+grab.extend();
+
+
+//going for the first and second rings
+intake.move(127);
+conveyor.move(127);
+chassis.turnToHeading(90, 1100);
+delay(200);
+lift.move_absolute(-500, 70);
+chassis.moveToPoint(-21, -22, 1000); //-21, -27
+chassis.moveToPose(17, -44,110, 3000, {.forwards = true, .maxSpeed = 127, .minSpeed = 30, .earlyExitRange = 5});
+conveyor.move(127);
+delay(1000);
+
+//wallstake ring
+chassis.swingToHeading(250, lemlib::DriveSide::LEFT, 1500, {.maxSpeed = 80, .minSpeed = 30, .earlyExitRange = 4});
+chassis.waitUntilDone();
+chassis.moveToPose(-2, -100, 180, 2800, {.lead = 0.67, .maxSpeed = 60});
+chassis.waitUntil(14);
+chassis.cancelMotion();
+delay(1500);
+
+//rush!!!!
+chassis.swingToHeading(290, lemlib::DriveSide::LEFT, 1500, {.maxSpeed = 90});
+chassis.waitUntilDone();
+conveyor.brake();
+conveyor.move(120);
+chassis.moveToPose(-37, -48, 270, 1500, {.maxSpeed = 50, . minSpeed = 20, .earlyExitRange = 4});
+chassis.moveToPoint(-43, -48, 1000, {.maxSpeed = 40});
+delay(500);
+chassis.moveToPoint(-54, -48, 900, {.maxSpeed = 40});
+chassis.waitUntilDone();
+chassis.moveToPoint(-70, -48, 500, {.maxSpeed = 60});
+chassis.waitUntilDone();
+chassis.setPose(-60,-49.5,270);
+
+
+
+
+/*
+chassis.turnToHeading(135, 700);
+chassis.moveToPoint(-52, -55, 1000);
+conveyor.brake();
+chassis.moveToPose(float x, float y, float theta, int timeout)
+*/
+
+//reset pose here
+//then turn to last ring and keep in conveyor
+//chassis.moveToPose(-47,18,0, 2000, {.lead = 0.3});
+
+
+
+}
+
+void red_goal_rush() {
+    left_motors.set_brake_mode(MotorBrake::hold);
+    right_motors.set_brake_mode(MotorBrake::hold);
+    chassis.setPose(-52,-37,90);
+    chassis.moveToPose(-10, -38, 115, 1000, {.lead = 0.4, .maxSpeed = 127, .minSpeed = 127, .earlyExitRange = 2});
+    chassis.waitUntil(40);
+    chassis.turnToHeading(115, 500);
+    chassis.waitUntilDone();
+    doinker.extend();
+    left_motors.brake();
+    right_motors.brake();
+    //chassis.moveToPoint(-31, -38, 800, {.forwards = false, .maxSpeed = 127, . minSpeed= 127, .earlyExitRange = 2});
 }

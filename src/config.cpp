@@ -51,7 +51,7 @@ lemlib::ControllerSettings lateral_controller(3.75, // proportional gain (kP) /4
                                               100, // small error range timeout, in milliseconds
                                               1.5, // large error range, in inches
                                               500, // large error range timeout, in milliseconds
-                                              20 // maximum acceleration (slew)
+                                              127 // maximum acceleration (slew) //was 20
 );
 
 
@@ -81,6 +81,7 @@ lemlib::Chassis chassis(drivetrain,
 //pneumatics
 adi::Pneumatics grab('A', false);
 adi::Pneumatics intakeLift('H',false);
+adi::Pneumatics doinker('C', false);
 
 //motors
 Motor intake(16, MotorGears::green);

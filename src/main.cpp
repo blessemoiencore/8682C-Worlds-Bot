@@ -1,8 +1,10 @@
 #include "main.h"
+#include "autons.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "cmath"
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/pid.hpp"
+#include "pros/abstract_motor.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
@@ -107,72 +109,7 @@ void competition_initialize() {}
  */
 void autonomous() {
 auto_started = true;
-/*
-conveyor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
-chassis.setPose(0,0,0);
-chassis.turnToHeading((90), 10000);
-*/
-
-//scoring the preload onto the alliance stake
-//chassis.angularPID.setGains(2.25, 0, 12.5); home pid constants
-chassis.setPose(-60,0,90);
-intakeLift.set_value(true);
-conveyor.move(127);
-delay(500);
-conveyor.brake();
-
-
-//grabbing first mobile goal
-chassis.moveToPoint(-48, 0, 900,{.forwards = true, .maxSpeed = 60});
-chassis.waitUntilDone();
-chassis.turnToHeading(0, 1100);
-chassis.moveToPoint(-48, -22, 1000,{.forwards = false, .maxSpeed =50 });
-delay(570);
-grab.extend();
-
-
-//going for the first and second rings
-//chassis.moveToPoint(-47, -23.5, 800, {.forwards = false, .maxSpeed = 40});
-intake.move(127);
-conveyor.move(90);
-chassis.turnToHeading(90, 1100);
-chassis.moveToPoint(-21, -22, 1000); //-21, -27
-
-//chassis.turnToHeading(110, 500);
-chassis.moveToPose(17, -44,110, 3000, {.forwards = true, .maxSpeed = 127, .minSpeed = 30, .earlyExitRange = 5});
-//chassis.turnToHeading(245, 1500);
-//chassis.moveToPose(5, -55, 270, 800, {.lead = 0.3});
-conveyor.move(127);
-//chassis.moveToPoint(-2, -58, 1000);
-delay(1000);
-chassis.swingToHeading(250, lemlib::DriveSide::LEFT, 1500, {.maxSpeed = 80, .minSpeed = 30, .earlyExitRange = 4});
-chassis.waitUntilDone();
-//delay(1500);
-chassis.moveToPose(-2, -100, 180, 2800, {.lead = 0.67, .maxSpeed = 60});
-//lift.move_absolute(-190, 170);
-delay(1500);
-//conveyor.brake();
-//lift.move_absolute(-1250, 170);
-chassis.swingToHeading(290, lemlib::DriveSide::LEFT, 1500, {.maxSpeed = 90});
-chassis.waitUntilDone();
-conveyor.brake();
-conveyor.move(90);
-chassis.moveToPose(-61, -48, 270, 4000, {.maxSpeed = 75});
-
-
-
-
-//chassis.moveToPose(-2, -62, 180, 600);
-//chassis.moveToPoint(-2, -62, 700, {.maxSpeed = 60});
-//chassis.turnToHeading(180, 800);
-//chassis.swingToHeading(180, lemlib::DriveSide::LEFT, 1000);
-//chassis.turnToPoint(4, -55, 1100);
-//hassis.moveToPoint(-8, 40, 3000, {.minSpeed = 20, .earlyExitRange = 4});
-//resetting pose
-//chassis.setPose(0,-60,180);
-
-
-
+red_goal_rush();
 }
 
 /**
@@ -198,6 +135,10 @@ void opcontrol() {
 
 			pros::lcd::print(4, "pid gains: %i", vertical_rotation.get_position()); // what will this do??? 
 
+		
+		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+			doinker.toggle();
+		}
 
 		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
 			grab.toggle();
