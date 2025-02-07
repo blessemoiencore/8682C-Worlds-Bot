@@ -1,6 +1,10 @@
 #include "autons.h"
+#include "lemlib/chassis/chassis.hpp"
 #include "main.h"
 #include "pros/abstract_motor.hpp"
+#include "pros/motors.h"
+#include "pros/rtos.h"
+#include "pros/rtos.hpp"
 
 void example_auton() {
     // Move to x: 20 and y: 15, and face heading 90. Timeout set to 4000 ms
@@ -62,8 +66,7 @@ void test_drive() {
 
 }
 
-void skills() {
-    /*
+void skills() {/*
 conveyor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 chassis.setPose(0,0,0);
 chassis.turnToHeading((90), 10000);
@@ -143,6 +146,7 @@ void red_goal_rush() {
     right_motors.set_brake_mode(MotorBrake::hold);
     chassis.setPose(-52,-37,90);
     chassis.moveToPose(-10, -38, 115, 1000, {.lead = 0.4, .maxSpeed = 127, .minSpeed = 127, .earlyExitRange = 2});
+    /*
     chassis.waitUntil(40);
     chassis.turnToHeading(115, 500);
     chassis.waitUntilDone();
@@ -150,4 +154,58 @@ void red_goal_rush() {
     left_motors.brake();
     right_motors.brake();
     //chassis.moveToPoint(-31, -38, 800, {.forwards = false, .maxSpeed = 127, . minSpeed= 127, .earlyExitRange = 2});
+    */
+}
+
+void blue_goal_rush() {
+    left_motors.set_brake_mode(MotorBrake::hold);
+    right_motors.set_brake_mode(MotorBrake::hold);
+    chassis.setPose(51.5, -60, 270);
+    chassis.moveToPoint(14, -60, 900, {.minSpeed = 80});
+    chassis.waitUntil(44);
+    chassis.turnToHeading(300, 300);
+    left_motors.brake();
+    right_motors.brake();
+    doinker.extend();
+    chassis.turnToHeading(205, 700);
+    delay(300);
+    chassis.moveToPose(60, -27,240, 1400, {.forwards = false, .maxSpeed = 80,});
+    delay(900);
+    grab.extend();
+    doinker.retract();
+    grab.retract();
+    chassis.swingToHeading(145, lemlib::DriveSide::LEFT, 1000, {.maxSpeed = 80});
+    chassis.moveToPoint(25, -26, 1000,{.forwards = false}); //25, -26
+    delay(1000);
+    grab.extend();
+    delay(200);
+    conveyor.move(127);
+    delay(500);
+    grab.retract();
+    chassis.swingToHeading(70, lemlib::DriveSide::LEFT, 700);
+    conveyor.brake();
+    delay(100);
+    intakeLift.extend();
+    intake.move(100);
+    conveyor.move(127);
+    chassis.moveToPoint(55, -29, 800, {.maxSpeed = 90});
+    delay(870);
+    conveyor.brake();
+    chassis.turnToHeading(355, 800);
+    intakeLift.retract();
+    chassis.moveToPoint(52 , -4.5, 800);
+    chassis.waitUntilDone();
+    intakeLift.extend();
+    delay(500);
+    chassis.moveToPoint(52, -18, 700, {.forwards = false});
+    chassis.turnToHeading(45, 800);
+    chassis.moveToPose(3,-42, 90, 2000, {.forwards = false, .lead = 0.7 });
+    chassis.waitUntilDone();
+    grab.extend();
+    conveyor.move(127);
+    intake.brake();
+    chassis.moveToPose(25, 5, 0, 2000, {.maxSpeed = 70});
+    
+    
+
 }

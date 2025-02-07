@@ -109,7 +109,7 @@ void competition_initialize() {}
  */
 void autonomous() {
 auto_started = true;
-red_goal_rush();
+blue_goal_rush();
 }
 
 /**

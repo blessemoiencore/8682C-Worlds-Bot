@@ -81,7 +81,7 @@ lemlib::Chassis chassis(drivetrain,
 //pneumatics
 adi::Pneumatics grab('A', false);
 adi::Pneumatics intakeLift('H',false);
-adi::Pneumatics doinker('C', false);
+adi::Pneumatics doinker('G', false);
 
 //motors
 Motor intake(16, MotorGears::green);

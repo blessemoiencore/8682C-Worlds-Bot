@@ -9,3 +9,5 @@ void test_drive();
 void skills();
 
 void red_goal_rush();
+
+void blue_goal_rush();
