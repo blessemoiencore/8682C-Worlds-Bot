@@ -161,6 +161,8 @@ void blue_goal_rush() {
     left_motors.set_brake_mode(MotorBrake::hold);
     right_motors.set_brake_mode(MotorBrake::hold);
     chassis.setPose(51.5, -60, 270);
+
+    ///goal rush
     chassis.moveToPoint(14, -60, 900, {.minSpeed = 80});
     chassis.waitUntil(44);
     chassis.turnToHeading(300, 300);
@@ -174,14 +176,20 @@ void blue_goal_rush() {
     grab.extend();
     doinker.retract();
     grab.retract();
+
+    //second goal
     chassis.swingToHeading(145, lemlib::DriveSide::LEFT, 1000, {.maxSpeed = 80});
     chassis.moveToPoint(25, -26, 1000,{.forwards = false}); //25, -26
     delay(1000);
     grab.extend();
     delay(200);
+
+    //preload
     conveyor.move(127);
     delay(500);
     grab.retract();
+
+    //ring 1
     chassis.swingToHeading(70, lemlib::DriveSide::LEFT, 700);
     conveyor.brake();
     delay(100);
@@ -191,21 +199,28 @@ void blue_goal_rush() {
     chassis.moveToPoint(55, -29, 800, {.maxSpeed = 90});
     delay(870);
     conveyor.brake();
+
+    //pile ring
     chassis.turnToHeading(355, 800);
     intakeLift.retract();
     chassis.moveToPoint(52 , -4.5, 800);
     chassis.waitUntilDone();
     intakeLift.extend();
     delay(500);
+
+    //second mogo
     chassis.moveToPoint(52, -18, 700, {.forwards = false});
     chassis.turnToHeading(45, 800);
-    chassis.moveToPose(3,-42, 90, 2000, {.forwards = false, .lead = 0.7 });
+    chassis.moveToPose(3,-42, 90, 1400, {.forwards = false, .lead = 0.7 });
     chassis.waitUntilDone();
+
+    //two rings
     grab.extend();
     conveyor.move(127);
     intake.brake();
-    chassis.moveToPose(25, 5, 0, 2000, {.maxSpeed = 70});
-    
-    
+
+    //ladder
+    chassis.turnToHeading(135, 800);
+    chassis.moveToPoint(5, -28, 1000, {.maxSpeed = 70});
 
 }
