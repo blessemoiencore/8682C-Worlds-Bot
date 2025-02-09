@@ -134,9 +134,17 @@ void opcontrol() {
 			pros::lcd::print(3, "angular: %f", imu1.get_heading());
 
 			pros::lcd::print(4, "pid gains: %i", vertical_rotation.get_position()); // what will this do??? 
-
 		
-		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+			lift.move_absolute(-1250, 170);
+		}
+
+		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+			lift.move_absolute(0, 170);
+		}
+		
+		
+		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 			doinker.toggle();
 		}
 
@@ -148,14 +156,17 @@ void opcontrol() {
 			intakeLift.toggle();
 		}
 
-		if (remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-			//lift.move_absolute(-1250, 170); //scoring pose
+		if (remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			lift.move_absolute(-230, 170);
 		}
 	
 		if(remote.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			intake.move(127);
 			conveyor.move(127);
+		}
+		else if(remote.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+			intake.move(-127);
+			conveyor.move(-127);
 		}
 		else {
 			intake.brake();

@@ -173,9 +173,7 @@ void blue_goal_rush() {
     delay(300);
     chassis.moveToPose(60, -27,240, 1400, {.forwards = false, .maxSpeed = 80,});
     delay(900);
-    grab.extend();
     doinker.retract();
-    grab.retract();
 
     //second goal
     chassis.swingToHeading(145, lemlib::DriveSide::LEFT, 1000, {.maxSpeed = 80});
@@ -197,7 +195,7 @@ void blue_goal_rush() {
     intake.move(100);
     conveyor.move(127);
     chassis.moveToPoint(55, -29, 800, {.maxSpeed = 90});
-    delay(870);
+    delay(750);
     conveyor.brake();
 
     //pile ring
@@ -221,6 +219,6 @@ void blue_goal_rush() {
 
     //ladder
     chassis.turnToHeading(135, 800);
-    chassis.moveToPoint(5, -28, 1000, {.maxSpeed = 70});
+    //chassis.moveToPoint(5, -28, 1000, {.maxSpeed = 120});
 
 }
