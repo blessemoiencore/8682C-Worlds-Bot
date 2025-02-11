@@ -61,10 +61,21 @@ void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "8682C");
 	chassis.calibrate();
-	//lady brown task
-	
+
+	 // lambda function, casts param to char* and prints as string
+	auto my_task {[](void* param) {std::cout << "Function Parameters: " << (char*)param << std::endl;} };
+ 	
+	// Task taskOne (my_task,  //calling the task
+	// 				 (void*)"hello, task!", //casts the string to type (void*) so the function can take it as param; can only be POINTER
+	//				 TASK_PRIORITY_DEFAULT, //priority of the task, higher equals higher prio, typically default+1 or default -1 etc.
+	//				 TASK_STACK_DEPTH_DEFAULT, //size of stack, or space; should usually be default
+	//				 "My task name here"
+	//   			)
+
+
 	 pros::Task odom_task([]{
-		while (true) {
+		//test this 
+		while (auto_started) {
 		 pros::lcd::print(2, "vertical sensor: %f", ((vertical_rotation.get_position() * 3.14159265  * 2.75)) / 36000 );
 		 pros::delay(10);
 		}
@@ -73,8 +84,6 @@ void initialize() {
 	 
 
 	pros::lcd::register_btn1_cb(on_center_button);
-
-	
 
 }
 
@@ -108,8 +117,8 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-auto_started = true;
-blue_goal_rush();
+	auto_started = true;
+	blue_goal_rush();
 }
 
 /**
@@ -126,14 +135,16 @@ blue_goal_rush();
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-
+	auto_started = false;
 
 
 	while (true) {
 
 			pros::lcd::print(3, "angular: %f", imu1.get_heading());
 
-			pros::lcd::print(4, "pid gains: %i", vertical_rotation.get_position()); // what will this do??? 
+		if(limitSwitch.get_new_press()) {
+			grab.extend();
+		}
 		
 		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
 			lift.move_absolute(-1250, 170);

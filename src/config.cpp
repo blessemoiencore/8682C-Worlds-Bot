@@ -30,6 +30,7 @@ lemlib::Drivetrain drivetrain(&left_motors,
 //sensors
 Imu imu1(5);//port
 Rotation lb_rotation(1); 
+adi::Button limitSwitch('D');
 
 //tracking wheel configuration
 //Rotation horizontal_rotation(1);
