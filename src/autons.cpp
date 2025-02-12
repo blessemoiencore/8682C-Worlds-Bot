@@ -37,7 +37,7 @@ void example_auton() {
 
 void PID_tuning() {
     chassis.setPose(0, 0, 0);
-    chassis.turnToHeading(90, 100000000);
+    chassis.moveToPoint(0, 24, 1000000);
 }
 
 void test_drive() {
@@ -221,4 +221,19 @@ void blue_goal_rush() {
     chassis.turnToHeading(135, 800);
     //chassis.moveToPoint(5, -28, 1000, {.maxSpeed = 120});
 
+}
+
+void blue_goal_rushV2() {
+    chassis.setPose(43,-38,242.7);
+    left_motors.set_brake_mode(MotorBrake::hold);
+    right_motors.set_brake_mode(MotorBrake::hold);
+
+    doinker.extend();
+    intakeLift.extend();
+    intake.move(127);
+    chassis.moveToPoint(17, -50, 1000, {.minSpeed = 80});
+    left_motors.brake();
+    right_motors.brake();
+    delay(1000);
+    doinker.retract();
 }

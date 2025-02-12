@@ -18,8 +18,9 @@
 Controller remote(pros::E_CONTROLLER_MASTER);
 bool auto_started = false;
 
-void lift_control(float angle) {
-    double tolerance = 0;
+void lift_control(void* param) {
+	float angle = *(float*) param;
+    double tolerance = 2;
     while ((fabs(angle - lb_rotation.get_position()) > tolerance)) {
         float kp = 0.0145;
         float error = angle - lb_rotation.get_position();
@@ -61,9 +62,11 @@ void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "8682C");
 	chassis.calibrate();
-
+	float angle = 20;
 	 // lambda function, casts param to char* and prints as string
 	auto my_task {[](void* param) {std::cout << "Function Parameters: " << (char*)param << std::endl;} };
+	//Task lift_task(lift_control, (void*)&angle ,TASK_PRIORITY_MAX - 1, TASK_STACK_DEPTH_DEFAULT, "lift control");
+	//Task lift_task_2(lift_control, (void*)"hello", 2, 1, "lift control2");
  	
 	// Task taskOne (my_task,  //calling the task
 	// 				 (void*)"hello, task!", //casts the string to type (void*) so the function can take it as param; can only be POINTER
@@ -118,7 +121,7 @@ void competition_initialize() {}
  */
 void autonomous() {
 	auto_started = true;
-	blue_goal_rush();
+	blue_goal_rushV2();
 }
 
 /**
@@ -147,7 +150,7 @@ void opcontrol() {
 		}
 		
 		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-			lift.move_absolute(-1250, 170);
+			lift.move_absolute(-1700, 40); //40 rpm lb???
 		}
 
 		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
@@ -165,6 +168,7 @@ void opcontrol() {
 
 		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
 			intakeLift.toggle();
+			//lift_control((int*)20);
 		}
 
 		if (remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
