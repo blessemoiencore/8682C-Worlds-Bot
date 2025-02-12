@@ -52,7 +52,7 @@ lemlib::ControllerSettings lateral_controller(3.75, // proportional gain (kP) /4
                                               100, // small error range timeout, in milliseconds
                                               1.5, // large error range, in inches
                                               500, // large error range timeout, in milliseconds
-                                              127 // maximum acceleration (slew) //was 20
+                                              20 // maximum acceleration (slew) //was 20
 );
 
 

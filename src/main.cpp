@@ -121,7 +121,7 @@ void competition_initialize() {}
  */
 void autonomous() {
 	auto_started = true;
-	blue_goal_rushV2();
+	red_pos_quals();
 }
 
 /**

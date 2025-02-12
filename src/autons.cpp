@@ -37,7 +37,7 @@ void example_auton() {
 
 void PID_tuning() {
     chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(0, 24, 1000000);
+    chassis.turnToHeading(90, 100000);
 }
 
 void test_drive() {
@@ -236,4 +236,47 @@ void blue_goal_rushV2() {
     right_motors.brake();
     delay(1000);
     doinker.retract();
+}
+
+
+// simple auton for quals, 
+//3 ring wallstake auton
+void red_pos_quals() {
+    chassis.setPose(-53,-16.5, 90);
+
+    //pile ring
+    chassis.turnToHeading(15 , 1000);
+    chassis.moveToPoint(-50, -7, 800, {.maxSpeed = 70});
+    chassis.waitUntilDone();
+    intakeLift.extend();
+    intake.move(127);
+    delay(700);
+
+    //mogo
+    chassis.turnToHeading(305, 1000);
+    chassis.moveToPoint(-27, -22, 1500, {.forwards = false, .maxSpeed = 80});
+    delay(1500);
+    grab.extend();
+    delay(400);
+    conveyor.move(127);
+    delay(1000);
+
+    //ring 2
+    chassis.turnToHeading(170, 1800);
+    chassis.moveToPoint(-27, -43,1900);
+    delay(2000);
+    grab.retract();
+   
+    //wallstake
+    chassis.turnToHeading(90, 1000);
+    intakeLift.retract();
+    delay(500);
+    chassis.moveToPoint(-12, -46, 800);
+    chassis.turnToHeading(180, 1000);
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-13, -72, 1500);
+    delay(1500);
+    lift.move_absolute(-1700, 170);
+    delay(1000);
+    //chassis.moveToPoint(-13, -29, 1000, {.forwards = false, .maxSpeed = 70}); //40 rpm lb???
 }
