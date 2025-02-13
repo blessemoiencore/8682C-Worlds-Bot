@@ -89,12 +89,18 @@ Motor intake(16, MotorGears::green);
 Motor conveyor(20, MotorGears::blue);
 Motor lift(11,MotorGears::green);
 
-//lady brown code
-/*
-float angle = 0;
-void move_lift(float target_angle) {
-    angle = target_angle * 100; //centidegrees
+//functions
+template <typename T>
+int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
 }
-*/
+
+float get_expo_value(float joystick_value, float deadband) {
+    if (std::fabs(joystick_value) < deadband) {
+    return 0;
+  }
+    else return sgn(joystick_value) *  (pow(sgn(joystick_value) * joystick_value, 1.9) ) / 63.095734448;
+}
+
 
 

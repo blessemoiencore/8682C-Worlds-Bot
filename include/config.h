@@ -30,6 +30,7 @@ extern adi::Pneumatics grab;
 extern adi::Pneumatics intakeLift;
 extern adi::Pneumatics doinker;
 extern adi::Button limitSwitch;
+extern float get_expo_value(float joystick_value, float deadband);
 
 //extern void move_lift(float angle);
 //extern void lift_control(float angle);

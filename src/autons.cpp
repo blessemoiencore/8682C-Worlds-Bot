@@ -312,6 +312,7 @@ void red_minus_ws() {
 
 //negate all angles
 //negate all x values
+//use move to pose or line up to drive straight
 void blue_pos_ws() {
     chassis.setPose(53,-16.5, -90);
 
@@ -342,10 +343,10 @@ void blue_pos_ws() {
     chassis.turnToHeading(-90, 1000);
     intakeLift.retract();
     delay(500);
-    chassis.moveToPoint(12, -46, 800);
+    chassis.moveToPoint(10, -46, 800);
     chassis.turnToHeading(-180, 1000);
     chassis.waitUntilDone();
-    chassis.moveToPoint(13, -72, 1500);
+    chassis.moveToPoint(10, -72, 1500);
     delay(1500);
     lift.move_absolute(-1700, 170);
     delay(1000);

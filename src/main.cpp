@@ -121,7 +121,7 @@ void competition_initialize() {}
  */
 void autonomous() {
 	auto_started = true;
-	red_pos_ws();
+	blue_pos_ws();
 }
 
 /**
@@ -150,11 +150,12 @@ void opcontrol() {
 		}
 		
 		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-			lift.move_absolute(-1700, 40); //40 rpm lb???
+			lift.move_absolute(-1700, 170); //40 rpm lb???
 		}
 
 		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
 			lift.move_absolute(0, 170);
+			intakeLift.retract();
 		}
 		
 		
@@ -162,7 +163,7 @@ void opcontrol() {
 			doinker.toggle();
 		}
 
-		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+		if(remote.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
 			grab.toggle();
 		}
 
@@ -188,11 +189,15 @@ void opcontrol() {
 			conveyor.brake();
 					}
 
-		//arcade
-		int dir = remote.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
-		int turn = remote.get_analog(ANALOG_RIGHT_X);  // Gets the turn left/right from right joystick
-		left_motors.move(dir + turn);                      // Sets left motor voltage
-		right_motors.move(dir - turn);                     // Sets right motor voltage
-		pros::delay(20);                               // Run for 20 ms then update
+		//arcade      
+		while (true) {
+    	float dir = get_expo_value(remote.get_analog(ANALOG_LEFT_Y), 6.35);  // Apply exponential scaling to forward/backward
+    	float turn = get_expo_value(remote.get_analog(ANALOG_RIGHT_X), 6.35); // Apply exponential scaling to turning
+
+    	left_motors.move(dir + turn);   // Adjust left motor power
+    	right_motors.move(dir - turn);  // Adjust right motor power
+
+    	pros::delay(20);  // Small delay to prevent CPU overload
+}                      // Run for 20 ms then update
 	}
 }
